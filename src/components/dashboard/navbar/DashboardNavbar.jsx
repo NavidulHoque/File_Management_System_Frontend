@@ -79,23 +79,31 @@ const DashboardNavbar = () => {
 
         </ol>
 
-        <div className="flex gap-x-3 self-end">
+        <div className="flex gap-3 self-end">
 
-          <Button handleOpen={openDeleteFilesComp}>
-            <RiDeleteBinLine /> Delete File
-          </Button>
+          <div className="flex sm:flex-row flex-col gap-3">
 
-          <Button handleOpen={openDeleteFoldersComp}>
-            <MdFolderDelete /> Delete Folder
-          </Button>
+            <Button handleOpen={openDeleteFilesComp}>
+              <RiDeleteBinLine /> Delete File
+            </Button>
 
-          <Button handleOpen={openCreateFileComp}>
-            <FaFileAlt /> Create File
-          </Button>
+            <Button handleOpen={openDeleteFoldersComp}>
+              <MdFolderDelete /> Delete Folder
+            </Button>
 
-          <Button handleOpen={openCreateFolderComp}>
-            <MdCreateNewFolder /> Create Folder
-          </Button>
+          </div>
+
+          <div className="flex sm:flex-row flex-col gap-3">
+
+            <Button handleOpen={openCreateFileComp}>
+              <FaFileAlt /> Create File
+            </Button>
+
+            <Button handleOpen={openCreateFolderComp}>
+              <MdCreateNewFolder /> Create Folder
+            </Button>
+            
+          </div>
 
         </div>
 
