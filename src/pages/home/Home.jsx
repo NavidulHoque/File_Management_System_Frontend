@@ -1,15 +1,6 @@
-import { useDispatch, useSelector } from "react-redux"
-import { removeID } from "../../features/slices/setTimeOutSlice"
 import { Helmet } from "react-helmet-async"
 
 const Home = () => {
-  const timeOutID = useSelector((state) => state.TimeOutID.timeOutID)
-  const dispatch = useDispatch()
-
-  clearTimeout(timeOutID)
-
-  dispatch(removeID())
-
   return (
     <>
       <Helmet>

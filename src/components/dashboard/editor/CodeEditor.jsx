@@ -4,10 +4,14 @@ import { useRef } from "react";
 import { languages } from "../../../programmingLanguages/languages";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { createSelector } from 'reselect';
 
 const CodeEditor = ({fileData, setFileData}) => {
     const {fileID} = useParams()
-    const file = useSelector(state => state.Files.files.find(file => file.fileID === fileID))
+    const file = useSelector(createSelector(
+      [(state) => state.Files.files],
+      (files) => files.find(file => file.fileID === fileID)
+    ))
     const editorRef = useRef()
 
     function onMount(editor) {

@@ -8,10 +8,11 @@ import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../../../database/firebaseConfig";
 import { deleteFile} from "../../../features/slices/fileSlice";
 import deletionOfFileInAncestors from "../../../functions/deletionOfFileInAncestors";
+import { selectFilesOfCurrentFolder } from "../../../memoization/selectFilesAndFoldersOfCurrentFolder";
 
 const DeleteFiles = ({ deleteFilesCompState }) => {
-    const { currentFolder, folders } = useSelector((state) => state.Folders)
-    const files = useSelector((state) => state.Files.files.filter(file => file.parent === currentFolder))
+    const folders = useSelector((state) => state.Folders.folders)
+    const filesOfCurrentFolder = useSelector(selectFilesOfCurrentFolder)
     const [loading, setLoading] = useState(false)
     const dispatch = useDispatch()
 
@@ -75,9 +76,9 @@ const DeleteFiles = ({ deleteFilesCompState }) => {
 
                     <h1 className="text-[22px]">Delete Files</h1>
 
-                    {files.length > 0 ? (
+                    {filesOfCurrentFolder.length > 0 ? (
                         <div className="flex flex-col gap-y-3">
-                            {files.map(file => (
+                            {filesOfCurrentFolder.map(file => (
 
                                 <div key={file.fileID} className="flex justify-between items-center">
 

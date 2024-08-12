@@ -5,12 +5,13 @@ import { useEffect } from "react"
 import ShowItems from "../../components/dashboard/showCreatedFilesAndFolders/ShowItems"
 import { changeCurrentFolder, fetchFolders } from "../../features/slices/folderSlice"
 import { fetchFiles } from "../../features/slices/fileSlice"
+import { selectFilesOfCurrentFolder, selectFoldersOfCurrentFolder } from "../../memoization/selectFilesAndFoldersOfCurrentFolder"
 
 const InsideFolder = () => {
   const { folderID } = useParams()
   const dispatch = useDispatch()
-  const folders = useSelector((state) => state.Folders.folders.filter(folder => folder.parent === folderID))
-  const files = useSelector((state) => state.Files.files.filter(file => file.parent === folderID))
+  const folders = useSelector(selectFoldersOfCurrentFolder)
+  const files = useSelector(selectFilesOfCurrentFolder)
   const isLoadingFolders = useSelector(state => state.Folders.isLoading)
   const isLoadingFiles = useSelector(state => state.Files.isLoading)
   const isErrorLoadingFolders = useSelector(state => state.Folders.isError)

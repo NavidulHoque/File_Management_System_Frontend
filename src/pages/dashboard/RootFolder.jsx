@@ -4,10 +4,11 @@ import ShowItems from "../../components/dashboard/showCreatedFilesAndFolders/Sho
 import { useEffect } from "react"
 import { changeCurrentFolder, fetchFolders } from "../../features/slices/folderSlice"
 import { fetchFiles } from "../../features/slices/fileSlice"
+import { selectRootFiles, selectRootFolders } from "../../memoization/selectRootFoldersAndFiles"
 
 const RootFolder = () => {
-  const folders = useSelector((state) => state.Folders.folders.filter(folder => folder.parent === "root"))
-  const files = useSelector((state) => state.Files.files.filter(file => file.parent === "root"))
+  const folders = useSelector(selectRootFolders)
+  const files = useSelector(selectRootFiles)
   const isLoadingFolders = useSelector(state => state.Folders.isLoading)
   const isLoadingFiles = useSelector(state => state.Files.isLoading)
   const isErrorLoadingFolders = useSelector(state => state.Folders.isError)

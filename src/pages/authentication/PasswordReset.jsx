@@ -60,7 +60,6 @@ const PasswordReset = () => {
         setLoading(false)
       })
 
-
   }
 
   return (

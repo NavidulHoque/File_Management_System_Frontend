@@ -5,10 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { closeDeleteFoldersComp } from "../../../features/slices/OpenOfCreationAndDeletionCompSlice";
 import deleteFolderAndContents from "../../../functions/deleteFolderAndContents";
+import { selectFoldersOfCurrentFolder } from "../../../memoization/selectFilesAndFoldersOfCurrentFolder";
 
 const DeleteFolders = ({ deleteFoldersCompState }) => {
-    const { currentFolder, folders } = useSelector((state) => state.Folders)
-    const foldersOfCurrentFolder = useSelector((state) => state.Folders.folders.filter(folder => folder.parent === currentFolder))
+    const folders = useSelector((state) => state.Folders.folders)
+    const foldersOfCurrentFolder = useSelector(selectFoldersOfCurrentFolder)
     const [loading, setLoading] = useState(false)
     const dispatch = useDispatch()
 

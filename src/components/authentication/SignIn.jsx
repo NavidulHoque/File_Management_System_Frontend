@@ -4,15 +4,15 @@ import { useFormik } from "formik";
 import { signIn } from "../../validation/validation";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import { Bounce } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { LogIn } from "../../features/slices/userLoginSlice";
-import { storeID } from "../../features/slices/setTimeOutSlice";
 
 const SignIn = ({ toast }) => {
   const dispatch = useDispatch()
+  const setTimeOutRef = useRef(null)
 
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate();
@@ -52,11 +52,9 @@ const SignIn = ({ toast }) => {
             })
           )
 
-          const timeOutID = setTimeout(() => {
+          setTimeOutRef.current = setTimeout(() => {
             navigate("/")
           }, 2000);
-
-          dispatch(storeID(timeOutID))
         }
 
         else {
@@ -93,6 +91,15 @@ const SignIn = ({ toast }) => {
       })
   }
 
+  useEffect(() => {    
+  
+    return () => {
+      if (setTimeOutRef.current) {
+        clearTimeout(setTimeOutRef.current)
+      }
+    }
+  }, [])
+  
   return (
     <form
       onSubmit={formik.handleSubmit}

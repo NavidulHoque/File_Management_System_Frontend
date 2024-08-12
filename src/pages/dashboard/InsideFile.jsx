@@ -7,10 +7,14 @@ import { ToastContainer } from "react-toastify"
 import { fetchFiles } from "../../features/slices/fileSlice"
 import { fetchFolders } from "../../features/slices/folderSlice"
 import { Helmet } from "react-helmet-async"
+import { createSelector } from "reselect"
 
 const InsideFile = () => {
   const { fileID } = useParams()
-  const file = useSelector(state => state.Files.files.find(file => file.fileID === fileID))
+  const file = useSelector(createSelector(
+    [(state) => state.Files.files],
+    (files) => files.find(file => file.fileID === fileID)
+  ))
   const [fileData, setFileData] = useState("")
   const dispatch = useDispatch()
   const isLoadingFiles = useSelector(state => state.Files.isLoading)
@@ -21,7 +25,6 @@ const InsideFile = () => {
     setFileData(file?.data)
 
   }, [file])
-
 
   useEffect(() => {
 

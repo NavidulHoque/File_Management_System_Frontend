@@ -9,17 +9,28 @@ import { Bounce, toast } from "react-toastify";
 import { useState } from "react";
 import { BeatLoader } from "react-spinners";
 import { updateFileData } from "../../../features/slices/fileSlice";
+import { createSelector } from 'reselect';
 
 const FilePageNavbar = ({ fileData }) => {
   const { fileID } = useParams()
-  const file = useSelector(state => state.Files.files.find(file => file.fileID === fileID))
+  const file = useSelector(createSelector(
+    [(state) => state.Files.files],
+    (files) => files.find(file => file.fileID === fileID)
+  ))
   const navigate = useNavigate()
   const currentFolder = useSelector(state => state.Folders.currentFolder)
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
 
   function handleGoBack() {
-    navigate(`/dashboard/folder/${currentFolder}`)
+    if (currentFolder === "root") {
+      navigate(`/dashboard`)
+    }
+
+    else{
+      navigate(`/dashboard/folder/${currentFolder}`)
+    }
+    
   }
 
   async function handleSave() {
@@ -40,8 +51,6 @@ const FilePageNavbar = ({ fileData }) => {
         data: fileData,
         savedDate: new Date().toString()
       }
-
-      console.log(updatedFile)
 
       dispatch(updateFileData(updatedFile))
 
