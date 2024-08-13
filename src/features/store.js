@@ -3,6 +3,7 @@ import userLoginSlice from "./slices/userLoginSlice";
 import fileSlice from "./slices/fileSlice";
 import folderSlice from "./slices/folderSlice";
 import OpenOfCreationAndDeletionCompSlice from "./slices/OpenOfCreationAndDeletionCompSlice";
+import setTimeOutSlice from "./slices/setTimeOutSlice";
 
 export const store = configureStore({
     reducer: {
@@ -10,5 +11,6 @@ export const store = configureStore({
         Files: fileSlice,
         Folders: folderSlice,
         OpenOfCreationAndDeletionComp: OpenOfCreationAndDeletionCompSlice,
+        TimeOutID: setTimeOutSlice
     }
 })
