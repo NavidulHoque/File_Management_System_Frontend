@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useDispatch, useSelector } from "react-redux";
 import { RxCross2 } from "react-icons/rx";
-
 import { useState } from "react";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { addDoc } from "firebase/firestore";
