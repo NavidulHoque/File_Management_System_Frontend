@@ -73,7 +73,8 @@ const CreateFolder = ({ createFolderCompState }) => {
           transition: Bounce,
         });
 
-        setLoading(false);
+        setLoading(false)
+        setFolderName("")
       }
 
       catch (error) {

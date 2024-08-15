@@ -92,6 +92,7 @@ const CreateFile = ({ createFileCompState }) => {
         })
 
         setLoading(false)
+        setFileName("")
       }
 
       catch (error) {
@@ -174,7 +175,7 @@ const CreateFile = ({ createFileCompState }) => {
             disabled={loading}
           >
             {loading ? <BeatLoader color="#fff" size={5} /> : "Create File"}
-            
+
           </button>
 
         </div>

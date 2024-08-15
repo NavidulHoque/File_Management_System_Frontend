@@ -64,10 +64,10 @@ const DeleteFiles = ({ deleteFilesCompState }) => {
         <>
             <ToastContainer />
             <div
-                className={`fixed w-full top-0 left-0 min-h-screen justify-center bg-[rgba(0,0,0,0.4)] py-10 ${deleteFilesCompState ? "flex z-10" : "hidden -z-10"
+                className={`fixed w-full top-0 left-0 h-screen justify-center bg-[rgba(0,0,0,0.4)] py-10 ${deleteFilesCompState ? "flex z-10" : "hidden -z-10"
                     }`}
             >
-                <div className="basis-[400px] rounded-md bg-white flex flex-col gap-y-5 relative p-[15px]">
+                <div className="basis-[400px] rounded-md bg-white flex flex-col gap-y-5 relative p-[15px] overflow-y-auto">
 
                     <RxCross2
                         onClick={() => dispatch(closeDeleteFilesComp())}
