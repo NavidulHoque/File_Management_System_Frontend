@@ -33,7 +33,7 @@ const DashboardNavbar = () => {
   return (
     <nav className="py-[10px]" aria-label="breadcrumb">
 
-      <div className="flex md:flex-row flex-col gap-y-2 md:justify-between w-[90vw] mx-auto">
+      <div className="flex lg:flex-row flex-col gap-y-2 md:justify-between w-[90vw] mx-auto">
 
         <ol className="breadcrumb flex space-x-2">
 
