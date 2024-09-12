@@ -7,11 +7,11 @@ export const signUp = Yup.object({
   password: Yup.string()
     .min(8)
     .matches(
-      /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/,
+      /^(?=.*[!@#$%^&*])/,
       "Please provide at least 1 special character"
     )
     .matches(
-      /^(?=.*[0-9])[a-zA-Z0-9!@#$%^&*]{6,16}$/,
+      /^(?=.*[0-9])/,
       "Please enter at least one number"
     )
     .required("Please fill up your password"),
