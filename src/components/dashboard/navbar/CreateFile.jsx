@@ -3,7 +3,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RxCross2 } from "react-icons/rx";
 import { useState } from "react";
-import { Bounce, toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { BeatLoader } from "react-spinners";
 import collectionFiles from './../../../functions/collectionFiles';
 import { addDoc } from "firebase/firestore";
@@ -11,6 +11,8 @@ import { validFileExtensions } from './../../../extensions/extensions';
 import { addFile } from "../../../features/slices/fileSlice";
 import { closeCreateFileComp } from "../../../features/slices/OpenOfCreationAndDeletionCompSlice";
 import updatingChildrenFiles from "../../../functions/updatingChildrenFiles";
+import successToast from "../../../functions/successToast";
+import errorToast from './../../../functions/errorToast';
 
 const CreateFile = ({ createFileCompState }) => {
   const { currentFolder, folders } = useSelector((state) => state.Folders)
@@ -29,33 +31,13 @@ const CreateFile = ({ createFileCompState }) => {
 
     if (files.find(file => file.name === (extensionExists ? fileName.split(".").map(x => x.trim()).join(".") : trimmedFileName.concat(".txt")) && file.parent === currentFolder)) {
 
-      toast.error("File already exists, please enter another name", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      })
+      errorToast("File already exists, please enter another name")
     }
 
     //checks if the extension is valid or not
     else if (!validExtensions.includes(extension) && extensionExists) {
 
-      toast.error("File extension invalid, please enter a valid file extension", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      })
+      errorToast("File extension invalid, please enter a valid file extension")
     }
 
     else if (trimmedFileName.length > 3) {
@@ -79,17 +61,7 @@ const CreateFile = ({ createFileCompState }) => {
 
         dispatch(addFile(fileInfo))
 
-        toast.success("File created", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Bounce,
-        })
+        successToast("File created")
 
         setLoading(false)
         setFileName("")
@@ -97,50 +69,19 @@ const CreateFile = ({ createFileCompState }) => {
 
       catch (error) {
 
-        toast.error("File creation failed, please try again", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Bounce,
-        })
-
         setLoading(false)
+        errorToast("File creation failed, please try again")
       }
     }
 
     else if (trimmedFileName.length <= 3 && trimmedFileName.length > 0) {
 
-      toast.error("File name should be greater than 3 characters", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      })
+      errorToast("File name should be greater than 3 characters")
     }
 
     else if (!trimmedFileName) {
 
-      toast.error("Please enter a file name", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      })
+      errorToast("Please enter a file name")
     }
   }
 

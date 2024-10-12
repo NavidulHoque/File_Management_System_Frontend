@@ -2,13 +2,15 @@
 import { useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
-import { Bounce, toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { closeDeleteFilesComp } from "../../../features/slices/OpenOfCreationAndDeletionCompSlice";
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../../../database/firebaseConfig";
 import { deleteFile} from "../../../features/slices/fileSlice";
 import deletionOfFileInAncestors from "../../../functions/deletionOfFileInAncestors";
 import { selectFilesOfCurrentFolder } from "../../../memoization/selectFilesAndFoldersOfCurrentFolder";
+import successToast from "../../../functions/successToast";
+import errorToast from "../../../functions/errorToast";
 
 const DeleteFiles = ({ deleteFilesCompState }) => {
     const folders = useSelector((state) => state.Folders.folders)
@@ -26,38 +28,16 @@ const DeleteFiles = ({ deleteFilesCompState }) => {
 
             dispatch(deleteFile(file.fileID))
 
-            toast.success("File deleted successfully", {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-            })
+            successToast("File deleted successfully")
 
             setLoading(false)
         }
 
         catch (error) {
 
-            toast.error("File deletion failed, please try again", {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-            })
-
             setLoading(false)
+            errorToast("File deletion failed, please try again")            
         }
-
     }
 
     return (

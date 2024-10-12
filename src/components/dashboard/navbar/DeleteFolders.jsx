@@ -2,10 +2,12 @@
 import { useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
-import { Bounce, toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { closeDeleteFoldersComp } from "../../../features/slices/OpenOfCreationAndDeletionCompSlice";
 import deleteFolderAndContents from "../../../functions/deleteFolderAndContents";
 import { selectFoldersOfCurrentFolder } from "../../../memoization/selectFilesAndFoldersOfCurrentFolder";
+import successToast from "../../../functions/successToast";
+import errorToast from "../../../functions/errorToast";
 
 const DeleteFolders = ({ deleteFoldersCompState }) => {
     const folders = useSelector((state) => state.Folders.folders)
@@ -19,37 +21,16 @@ const DeleteFolders = ({ deleteFoldersCompState }) => {
             setLoading(true)
 
             await deleteFolderAndContents(folder, folders, dispatch)
-            
-            toast.success("Folder deleted successfully", {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-            })
 
             setLoading(false)
+            
+            successToast("Folder deleted successfully")
         }
 
         catch (error) {
 
-            toast.error("Folder deletion failed, please try again", {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-            })
-
             setLoading(false)
+            errorToast("Folder deletion failed, please try again")
         }
     }
 

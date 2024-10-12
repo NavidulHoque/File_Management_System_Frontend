@@ -5,11 +5,12 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { FaSave } from "react-icons/fa";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../database/firebaseConfig";
-import { Bounce, toast } from "react-toastify";
 import { useState } from "react";
 import { BeatLoader } from "react-spinners";
 import { updateFileData } from "../../../features/slices/fileSlice";
 import { createSelector } from 'reselect';
+import successToast from "../../../functions/successToast";
+import errorToast from "../../../functions/errorToast";
 
 const FilePageNavbar = ({ fileData }) => {
   const { fileID } = useParams()
@@ -54,36 +55,14 @@ const FilePageNavbar = ({ fileData }) => {
 
       dispatch(updateFileData(updatedFile))
 
-      toast.success("File saved successfully", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      })
-
       setLoading(false)
+      successToast("File saved successfully")
     }
 
     catch (error) {
 
-      toast.error("Failed to save the file, please try again", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      })
-
       setLoading(false)
+      errorToast("Failed to save the file, please try again")
     }
   }
 

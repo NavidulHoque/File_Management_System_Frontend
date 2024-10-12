@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
-import { Bounce, toast } from "react-toastify";
 import { LogOut } from "../../features/slices/userLoginSlice";
+import errorToast from "../../functions/errorToast";
 
 const Navbar = () => {
   const user = useSelector((state) => state.UserLogin.user);
@@ -21,17 +21,7 @@ const Navbar = () => {
       })
       .catch(() => {
 
-        toast.error("Something went wrong, please try again to log out", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Bounce,
-        })
+        errorToast("Something went wrong, please try again")
       })
   }
 

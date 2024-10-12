@@ -2,13 +2,16 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RxCross2 } from "react-icons/rx";
 import { useState } from "react";
-import { Bounce, toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { addDoc } from "firebase/firestore";
 import { BeatLoader } from "react-spinners";
 import collectionFolders from "./../../../functions/collectionFolders";
 import { addFolder } from "../../../features/slices/folderSlice";
 import { closeCreateFolderComp } from "../../../features/slices/OpenOfCreationAndDeletionCompSlice"
 import updatingChildrenFolders from "../../../functions/updatingChildrenFolders";
+import errorToast from "../../../functions/errorToast";
+import successToast from "../../../functions/successToast";
+
 
 const CreateFolder = ({ createFolderCompState }) => {
   const { currentFolder, folders } = useSelector(
@@ -25,17 +28,7 @@ const CreateFolder = ({ createFolderCompState }) => {
 
     if (folders.find((folder) => folder.name === trimmedFolderName && folder.parent === currentFolder)) {
 
-      toast.error("Folder already exists, please enter another name", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      })
+      errorToast("Folder already exists, please enter another name")
     }
 
     else if (trimmedFolderName.length > 3) {
@@ -60,66 +53,27 @@ const CreateFolder = ({ createFolderCompState }) => {
 
         dispatch(addFolder(folderInfo))
 
-        toast.success("Folder created", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Bounce,
-        });
+        successToast("Folder created")
 
         setLoading(false)
         setFolderName("")
       }
 
       catch (error) {
-        toast.error("Folder creation failed, please try again", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Bounce,
-        });
 
         setLoading(false);
+        errorToast("Folder creation failed, please try again")
       }
     }
 
     else if (trimmedFolderName.length <= 3 && trimmedFolderName.length > 0) {
-      toast.error("Folder name should be greater than 3 characters", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      });
 
+      errorToast("Folder name should be greater than 3 characters")
     }
 
     else if (!trimmedFolderName) {
-      toast.error("Please enter a folder name", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      });
+
+      errorToast("Please enter a folder name")
     }
   }
 
