@@ -1,8 +1,8 @@
 import Lottie from "lottie-react";
 import LoginAnimation from "../../animation/LoginAnimation.json";
-import SignIn from "../../components/authentication/SignIn";
 import { Helmet } from "react-helmet-async";
-import { ToastContainer, toast  } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import LoginForm from "../../components/authentication/LoginForm";
 
 const Login = () => {
     return (
@@ -25,7 +25,7 @@ const Login = () => {
 
                     <div className="sm:w-[48%] w-[80%] flex items-center self-center">
 
-                        <SignIn toast={toast} />
+                        <LoginForm />
 
                     </div>
 

@@ -1,28 +1,40 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { getAuth, signOut } from "firebase/auth";
+import { useLocation, useNavigate } from "react-router-dom";
 import { LogOut } from "../../features/slices/userLoginSlice";
-import errorToast from "../../functions/errorToast";
+import { useState } from "react";
+import axios from "axios";
+import { url } from "../../url";
+import { BeatLoader } from "react-spinners";
+import { motion } from 'framer-motion';
+import Button from "./Button";
+import handleError from "../../functions/handleError";
 
 const Navbar = () => {
-  const user = useSelector((state) => state.UserLogin.user);
-  const dispatch = useDispatch();
-  const auth = getAuth();
+  const user = useSelector((state) => state.UserLogin.user)
+  const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
   const location = useLocation()
   const navigate = useNavigate()
 
-  function handleLogOut() {
-    signOut(auth)
-      .then(() => {
+  const handleLogOut = async () => {
+    setLoading(true)
 
+    try {
+      const response = await axios.get(url + "/auth/logout", { withCredentials: true })
+
+      if (response.data.status) {
+        setLoading(false)
         dispatch(LogOut())
-        navigate("/")
+      }
 
-      })
-      .catch(() => {
+      else {
+        throw new Error(response.data.message)
+      }
+    }
 
-        errorToast("Something went wrong, please try again")
-      })
+    catch (error) {
+      handleError({setLoading, error})
+    }
   }
 
   return (
@@ -30,46 +42,66 @@ const Navbar = () => {
 
       <div className="w-[90vw] mx-auto flex md:flex-row flex-col items-center justify-center md:justify-between h-full gap-y-3">
 
-        <h1 className="font-semibold text-[24px]">File Management System</h1>
+        <motion.h1
+          className="font-semibold"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{
+            type: "spring",
+            stiffness: 260,
+            damping: 20
+          }}
+        >
+          File Management System
+        </motion.h1>
 
         {user ? (
 
           <div className="flex sm:flex-row flex-col items-center sm:gap-x-3 gap-y-2 justify-center">
 
-            <p className="text-[20px] pr-[10px]">
+            <motion.p
+              className="pr-[10px]"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 260,
+                damping: 20
+              }}
+            >
 
-              Hello <span className="text-amber-400">{user.displayName}</span>
+              Hello <span className="text-amber-400">{user.username}</span>
 
-            </p>
+            </motion.p>
 
             <div className="flex gap-x-3">
 
               {location.pathname === "/dashboard" ? (
 
-                <Link
-                  to="/"
-                  className="rounded-md p-[10px] bg-[#9b59b6] hover:bg-[#8e44ad]"
-                >
-                  Home
-                </Link>
+                <Button
+                  label="Home"
+                  handleClick={() => navigate("/")}
+                  bgColor="bg-[#9b59b6]"
+                  bgColorHover="hover:bg-[#8e44ad]"
+                />
 
               ) : (
 
-                <Link
-                  to="/dashboard"
-                  className="rounded-md p-[10px] bg-[#9b59b6] hover:bg-[#8e44ad]"
-                >
-                  Dashboard
-                </Link>
+                <Button
+                  label="Dashboard"
+                  handleClick={() => navigate("/dashboard")}
+                  bgColor="bg-[#9b59b6]"
+                  bgColorHover="hover:bg-[#8e44ad]"
+                />
 
               )}
 
-              <button
-                onClick={handleLogOut}
-                className="rounded-md p-[10px] bg-[#1abc9c] hover:bg-[#16a085]"
-              >
-                Log Out
-              </button>
+              <Button
+                label={loading ? <BeatLoader color="#fff" size={5} /> : "Logout"}
+                handleClick={handleLogOut}
+                bgColor="bg-[#1abc9c]"
+                bgColorHover="hover:bg-[#16a085]"
+              />
 
             </div>
 
@@ -79,19 +111,19 @@ const Navbar = () => {
 
           <div className="flex gap-x-3">
 
-            <Link
-              to="/login"
-              className="rounded-md p-[10px] bg-[#9b59b6] hover:bg-[#8e44ad]"
-            >
-              Login
-            </Link>
+            <Button
+              label="Login"
+              handleClick={() => navigate("/login")}
+              bgColor="bg-[#9b59b6]"
+              bgColorHover="hover:bg-[#8e44ad]"
+            />
 
-            <Link
-              to="/registration"
-              className="rounded-md p-[10px] bg-[#1abc9c] hover:bg-[#16a085]"
-            >
-              Register
-            </Link>
+            <Button
+              label="Register"
+              handleClick={() => navigate("/registration")}
+              bgColor="bg-[#1abc9c]"
+              bgColorHover="hover:bg-[#16a085]"
+            />
 
           </div>
 

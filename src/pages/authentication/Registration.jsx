@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
-import SignUp from "../../components/authentication/SignUp"; 
 import Lottie from "lottie-react";
 import RegAnimation from "../../animation/RegAnimation.json"
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import { Helmet } from "react-helmet-async";
+import RegistrationForm from "../../components/authentication/RegistrationForm";
 
 const Registration = () => {
     return (
@@ -26,7 +26,7 @@ const Registration = () => {
 
                     <div className="sm:w-[48%] w-[80%] flex items-center self-center">
 
-                        <SignUp toast={toast} />
+                        <RegistrationForm />
 
                     </div>
 

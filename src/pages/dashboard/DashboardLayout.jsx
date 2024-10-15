@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom"
-import DashboardNavbar from "../../components/dashboard/navbar/DashboardNavbar"
 import { Helmet } from "react-helmet-async"
+import AllProvider from "../../AllProvider"
+import DashboardNavbar from './../../components/dashboard/navbar/dashboardNavbar/DashboardNavbar';
 
 const DashboardLayout = () => {
   return (
@@ -9,12 +10,16 @@ const DashboardLayout = () => {
         <title>Dashboard Folder</title>
       </Helmet>
 
-      <div className="min-h-[85vh] pt-3">
+      <AllProvider>
 
-        <DashboardNavbar />
-        <Outlet />
+        <div className="min-h-[85vh] pt-3">
 
-      </div>
+          <DashboardNavbar />
+          <Outlet />
+
+        </div>
+
+      </AllProvider>
     </>
   )
 }

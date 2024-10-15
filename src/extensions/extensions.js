@@ -14,16 +14,6 @@ export const validFileExtensions = [
   'ppt',
   'pptx',
 
-  // Image files
-  'jpg',
-  'jpeg',
-  'png',
-  'gif',
-  'bmp',
-  'tiff',
-  'svg',
-  'webp',
-
   // Audio files
   'mp3',
   'wav',
