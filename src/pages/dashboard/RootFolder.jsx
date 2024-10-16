@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -28,7 +27,7 @@ const RootFolder = () => {
 
     getFiles({ path: "/file/files/root", isMountedRef, setLoading, setFiles, dispatch, navigate })
 
-  }, [])
+  }, [dispatch, navigate, isMountedRef, setCurrentFolder, setFiles, setFolders])
 
 
   return (

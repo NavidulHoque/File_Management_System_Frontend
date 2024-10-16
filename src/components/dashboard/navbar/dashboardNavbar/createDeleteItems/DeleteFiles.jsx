@@ -1,6 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from 'axios';
 import { url } from "../../../../../url";
 import Portal from './Portal';
@@ -36,10 +35,10 @@ const DeleteFiles = ({ setOpenDeleteFiles }) => {
 
         getFiles({ path: `/file/files/${currentFolder}`, setLoading, setFiles, dispatch, navigate })
 
-    }, [currentFolder])
+    }, [currentFolder, dispatch, navigate, setFiles])
 
 
-    async function handleDeleteFile(file) {
+    const handleDeleteFile = useCallback(async (file) => {
 
         try {
             setLoadingFiles(prev => ({ ...prev, [file.id]: true }))
@@ -68,7 +67,8 @@ const DeleteFiles = ({ setOpenDeleteFiles }) => {
                 setLoadingFiles(prev => ({ ...prev, [file.id]: false }))
             }
         }
-    }
+
+    }, [dispatch, isMountedRef, navigate, setFiles])
 
     return (
         <>

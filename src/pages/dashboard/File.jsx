@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import FilePageNavbar from "../../components/dashboard/navbar/FilePageNavbar/FilePageNavbar"
 import CodeEditor from "../../components/dashboard/editor/CodeEditor"
 import { useEffect, useState } from "react"
@@ -23,33 +22,35 @@ const File = () => {
 
   useEffect(() => {
 
+    async function getFile() {
+
+      try {
+        const response = await axios.get(url + `/file/${fileID}`, { withCredentials: true })
+
+        if (response.data.status) {
+          setFile(response.data.file)
+          setFileData(response.data.file.data)
+        }
+
+        else {
+          throw new Error(response.data.message)
+        }
+      }
+
+      catch (error) {
+        handleError({ error, dispatch, navigate })
+      }
+
+      finally {
+        makeLoadingFalse(isMountedRef.current, setLoading)
+      }
+    }
+
     getFile()
 
-  }, [fileID])
+  }, [fileID, dispatch, navigate, isMountedRef])
 
-  async function getFile() {    
 
-    try {
-      const response = await axios.get(url + `/file/${fileID}`, { withCredentials: true })
-
-      if (response.data.status) {
-        setFile(response.data.file)
-        setFileData(response.data.file.data)
-      }
-
-      else {
-        throw new Error(response.data.message)
-      }
-    }
-
-    catch (error) {
-      handleError({ error, dispatch, navigate })
-    }
-
-    finally{
-      makeLoadingFalse(isMountedRef.current, setLoading)
-    }
-  }
 
   return (
     <>

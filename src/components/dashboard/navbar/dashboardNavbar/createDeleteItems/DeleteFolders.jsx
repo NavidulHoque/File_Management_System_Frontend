@@ -1,6 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import successToast from "../../../../../functions/successToast";
 import { url } from "../../../../../url";
@@ -41,10 +40,10 @@ const DeleteFolders = ({ setOpenDeleteFolders }) => {
             navigate
         })
 
-    }, [currentFolder])
+    }, [currentFolder, dispatch, navigate, setFolders])
 
 
-    async function handleDeleteFolder(folder) {
+    const handleDeleteFolder = useCallback(async (folder) => {
 
         try {
             setLoadingFolders(prev => ({ ...prev, [folder.id]: true }))
@@ -75,7 +74,7 @@ const DeleteFolders = ({ setOpenDeleteFolders }) => {
                 setLoadingFolders(prev => ({ ...prev, [folder.id]: false }));
             }
         }
-    }
+    }, [dispatch, isMountedRef, navigate, setFolders])
 
     return (
         <Portal>

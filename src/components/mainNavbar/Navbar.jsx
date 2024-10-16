@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LogOut } from "../../features/slices/userLoginSlice";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import axios from "axios";
 import { url } from "../../url";
 import { BeatLoader } from "react-spinners";
@@ -16,7 +16,7 @@ const Navbar = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const handleLogOut = async () => {
+  const handleLogOut = useCallback(async () => {
     setLoading(true)
 
     try {
@@ -38,7 +38,8 @@ const Navbar = () => {
     finally{
       setLoading(false)
     }
-  }
+    
+  }, [dispatch])
 
   return (
     <nav className="bg-[rgb(40,40,40)] text-white h-[25vh] md:h-[12vh]">

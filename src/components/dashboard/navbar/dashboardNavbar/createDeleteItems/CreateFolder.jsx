@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import errorToast from "../../../../../functions/errorToast";
 import successToast from "../../../../../functions/successToast";
 import useCurrentFolder from "../../../../../hooks/useCurrentFolder";
@@ -29,7 +29,8 @@ const CreateFolder = ({ setOpenCreateFolders }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  async function handleAddFolder() {
+
+  const handleAddFolder = useCallback(async () => {
 
     const trimmedFolderName = folderName.trim()
 
@@ -82,7 +83,8 @@ const CreateFolder = ({ setOpenCreateFolders }) => {
         makeLoadingFalse(isMountedRef.current, setLoading)
       }
     }
-  }
+
+  }, [currentFolder, user, folderName, dispatch, isMountedRef, navigate, setFolders])
 
   return (
 

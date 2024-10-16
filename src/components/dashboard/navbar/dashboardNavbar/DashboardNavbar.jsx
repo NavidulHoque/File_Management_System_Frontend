@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { FaFileAlt } from "react-icons/fa";
 import { MdCreateNewFolder } from "react-icons/md";
 import Button from "./Button";
@@ -55,11 +54,37 @@ const DashboardNavbar = () => {
 
   useEffect(() => {
 
+    async function getFolders() {
+
+      const path = `/folder/foldersOfLoggedInUser/${user.id}`
+      setLoading(true)
+
+      try {
+        const response = await axios.get(url + path, { withCredentials: true })
+
+        if (response.data.status) {
+          setFoldersOfLoggedInUser(response.data.folders)
+        }
+
+        else {
+          throw new Error(response.data.message)
+        }
+      }
+
+      catch (error) {
+        handleError({ error, dispatch, navigate })
+      }
+
+      finally {
+        makeLoadingFalse(isMountedRef.current, setLoading)
+      }
+    }
+
     if (currentFolder !== "root") {
       getFolders()
     }
 
-  }, [currentFolder, user])
+  }, [currentFolder, user, dispatch, navigate, isMountedRef])
 
 
   useEffect(() => {
@@ -89,34 +114,8 @@ const DashboardNavbar = () => {
       }
     }
 
-  }, [foldersOfLoggedInUser])
+  }, [foldersOfLoggedInUser, currentFolder])
 
-
-  async function getFolders() {
-
-    const path = `/folder/foldersOfLoggedInUser/${user.id}`
-    setLoading(true)
-
-    try {
-      const response = await axios.get(url + path, { withCredentials: true })
-
-      if (response.data.status) {
-        setFoldersOfLoggedInUser(response.data.folders)
-      }
-
-      else {
-        throw new Error(response.data.message)
-      }
-    }
-
-    catch (error) {
-      handleError({ error, dispatch, navigate })
-    }
-
-    finally{
-      makeLoadingFalse(isMountedRef.current, setLoading)
-    }
-  }
 
   return (
     <>

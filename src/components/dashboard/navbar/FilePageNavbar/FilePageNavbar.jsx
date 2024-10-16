@@ -2,7 +2,7 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { FaSave } from "react-icons/fa";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import successToast from "../../../../functions/successToast";
 import axios from "axios";
 import { url } from "../../../../url";
@@ -19,7 +19,7 @@ const FilePageNavbar = ({ file, fileData, setFile }) => {
   const [loading, setLoading] = useState(false)
   const isMountedRef = useIsMounted()
 
-  function handleGoBack() {
+  const handleGoBack = useCallback(async () => {
     if (file?.parent === "root") {
       navigate(`/dashboard`)
     }
@@ -27,9 +27,9 @@ const FilePageNavbar = ({ file, fileData, setFile }) => {
     else {
       navigate(`/dashboard/folder/${file?.parent}`)
     }
-  }
+  }, [file, navigate])
 
-  async function handleSave() {
+  const handleSave = useCallback(async () => {
 
     try {
       setLoading(true)
@@ -59,7 +59,7 @@ const FilePageNavbar = ({ file, fileData, setFile }) => {
     finally{
       makeLoadingFalse(isMountedRef.current, setLoading)
     }
-  }
+  }, [dispatch, fileID, fileData, isMountedRef, navigate, setFile])
 
   return (
     <nav className="py-[15px]">

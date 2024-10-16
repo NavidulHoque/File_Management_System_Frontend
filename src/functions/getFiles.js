@@ -1,7 +1,6 @@
 import axios from "axios"
 import { url } from "../url"
-import errorToast from "./errorToast"
-import { LogOut } from "../features/slices/userLoginSlice"
+import handleError from './handleError';
 
 export default async function getFiles({ path, setLoading, setFiles, dispatch, navigate }) {
 
@@ -29,15 +28,7 @@ export default async function getFiles({ path, setLoading, setFiles, dispatch, n
 
     else {
 
-      errorToast(error.message)
-      
-      if (error.message.toLowerCase().includes("token")) {
-
-        dispatch(LogOut())
-        navigate("/login")
-      }
+      handleError({error, dispatch, navigate})
     }
-
-    
   }
 }

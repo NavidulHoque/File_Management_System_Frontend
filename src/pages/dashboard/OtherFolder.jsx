@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
@@ -27,7 +26,7 @@ const OtherFolder = () => {
     
     getFiles({ path: `/file/files/${folderID}`, setLoading, setFiles, dispatch, navigate })
 
-  }, [folderID])
+  }, [folderID, dispatch, navigate, setCurrentFolder, setFolders, setFiles])
 
   return (
     <div className="flex flex-col pt-6">

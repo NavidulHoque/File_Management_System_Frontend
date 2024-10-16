@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
+
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import successToast from "../../../../../functions/successToast";
 import errorToast from "../../../../../functions/errorToast";
 import useCurrentFolder from "../../../../../hooks/useCurrentFolder";
@@ -32,7 +33,7 @@ const CreateFile = ({ setOpenCreateFiles }) => {
   const validExtensions = validFileExtensions
 
 
-  async function handleAddFile() {
+  const handleAddFile = useCallback(async () => {
 
     const trimmedFileName = fileName.trim()
     const [basename, extension] = trimmedFileName && trimmedFileName.split(".")
@@ -96,7 +97,8 @@ const CreateFile = ({ setOpenCreateFiles }) => {
         makeLoadingFalse(isMountedRef.current, setLoading)
       }
     }
-  }
+
+  }, [currentFolder, fileName, user, dispatch, isMountedRef, navigate, setFiles, validExtensions])
 
   return (
     <>
