@@ -17,12 +17,17 @@ import ItemDiv from "./ItemDiv";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import handleError from "../../../../../functions/handleError";
+import sortFilesAndFolders from "../../../../../functions/sortFilesAndFolders";
+import { ColorRing } from 'react-loader-spinner';
+import { useIsMounted } from "../../../../../hooks/useIsMounted";
 
 
 const DeleteFolders = ({ setOpenDeleteFolders }) => {
     const { folders, setFolders } = useFolders()
     const { currentFolder } = useCurrentFolder()
-    const [loading, setLoading] = useState(false)
+    const isMountedRef = useIsMounted()
+    const [loading, setLoading] = useState(true)
+    const [loadingFolders, setLoadingFolders] = useState({})
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -42,13 +47,11 @@ const DeleteFolders = ({ setOpenDeleteFolders }) => {
     async function handleDeleteFolder(folder) {
 
         try {
-            setLoading(true)
+            setLoadingFolders(prev => ({ ...prev, [folder.id]: true }))
 
             const response = await axios.delete(url + `/folder/${folder.id}`, { withCredentials: true })
 
             if (response.data.status) {
-
-                setLoading(false)
 
                 setFolders(prevFolders => prevFolders.filter(
                     prevFolder => prevFolder.id !== response.data.folder.id
@@ -64,7 +67,13 @@ const DeleteFolders = ({ setOpenDeleteFolders }) => {
 
         catch (error) {
 
-            handleError({ setLoading, error, dispatch, navigate })
+            handleError({ error, dispatch, navigate })
+        }
+
+        finally {
+            if (isMountedRef.current) {
+                setLoadingFolders(prev => ({ ...prev, [folder.id]: false }));
+            }
         }
     }
 
@@ -77,32 +86,52 @@ const DeleteFolders = ({ setOpenDeleteFolders }) => {
 
                 <Heading label="Delete Folders" />
 
-                {folders.length > 0 ? (
+                {loading ? (
 
-                    <ItemsDiv>
+                    <div className='w-full flex justify-center items-center'>
 
-                        {folders.map(folder => (
+                        <ColorRing
+                            visible={true}
+                            height="100"
+                            width="100"
+                            ariaLabel="color-ring-loading"
+                            wrapperStyle={{}}
+                            wrapperClass="color-ring-wrapper"
+                            colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+                        />
 
-                            <ItemDiv key={folder.id}>
+                    </div>
 
-                                <p>{folder.name}</p>
-
-                                <Button
-                                    loading={loading}
-                                    label="delete"
-                                    handleClick={() => handleDeleteFolder(folder)}
-                                    bgColor="bg-red-500"
-                                    bgColorHover="hover:bg-red-600"
-                                    bgColorDisabled="disabled:bg-red-300"
-                                />
-
-                            </ItemDiv>
-
-                        ))}
-
-                    </ItemsDiv>
                 ) : (
-                    <h1 className="text-center text-[15px]">No Folders to show</h1>
+
+                    folders.length > 0 ? (
+
+                        <ItemsDiv>
+
+                            {sortFilesAndFolders(folders).map(folder => (
+
+                                <ItemDiv key={folder.id}>
+
+                                    <p>{folder.name}</p>
+
+                                    <Button
+                                        loading={loadingFolders[folder.id]}
+                                        label="delete"
+                                        handleClick={() => handleDeleteFolder(folder)}
+                                        bgColor="bg-red-500"
+                                        bgColorHover="hover:bg-red-600"
+                                        bgColorDisabled="disabled:bg-red-300"
+                                    />
+
+                                </ItemDiv>
+
+                            ))}
+
+                        </ItemsDiv>
+                    ) : (
+                        <h1 className="text-center text-[15px]">No Folders to show</h1>
+                    )
+
                 )}
 
             </ParentDiv>

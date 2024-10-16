@@ -9,6 +9,8 @@ import axios from 'axios';
 import { url } from '../../url';
 import { ColorRing } from 'react-loader-spinner'
 import handleError from "../../functions/handleError"
+import { useIsMounted } from "../../hooks/useIsMounted"
+import makeLoadingFalse from "../../functions/makeLoadingFalse"
 
 const File = () => {
   const { fileID } = useParams()
@@ -17,6 +19,7 @@ const File = () => {
   const [loading, setLoading] = useState(true)
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const isMountedRef = useIsMounted()
 
   useEffect(() => {
 
@@ -24,7 +27,7 @@ const File = () => {
 
   }, [fileID])
 
-  async function getFile() {
+  async function getFile() {    
 
     try {
       const response = await axios.get(url + `/file/${fileID}`, { withCredentials: true })
@@ -32,7 +35,6 @@ const File = () => {
       if (response.data.status) {
         setFile(response.data.file)
         setFileData(response.data.file.data)
-        setLoading(false)
       }
 
       else {
@@ -41,7 +43,11 @@ const File = () => {
     }
 
     catch (error) {
-      handleError({ setLoading, error, dispatch, navigate })
+      handleError({ error, dispatch, navigate })
+    }
+
+    finally{
+      makeLoadingFalse(isMountedRef.current, setLoading)
     }
   }
 

@@ -9,12 +9,15 @@ import { url } from "../../../../url";
 import Button from "./Button";
 import handleError from "../../../../functions/handleError";
 import { useDispatch } from "react-redux";
+import makeLoadingFalse from "../../../../functions/makeLoadingFalse";
+import { useIsMounted } from "../../../../hooks/useIsMounted";
 
 const FilePageNavbar = ({ file, fileData, setFile }) => {
   const { fileID } = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
+  const isMountedRef = useIsMounted()
 
   function handleGoBack() {
     if (file?.parent === "root") {
@@ -39,7 +42,6 @@ const FilePageNavbar = ({ file, fileData, setFile }) => {
 
       if (response.data.status) {
 
-        setLoading(false)
         setFile(response.data.file)
         successToast(response.data.message)
       }
@@ -51,7 +53,11 @@ const FilePageNavbar = ({ file, fileData, setFile }) => {
 
     catch (error) {
 
-      handleError({setLoading, error, dispatch, navigate})
+      handleError({ error, dispatch, navigate})
+    }
+
+    finally{
+      makeLoadingFalse(isMountedRef.current, setLoading)
     }
   }
 

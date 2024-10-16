@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import axios from 'axios';
-import { url } from "../../../../../url"; 
+import { url } from "../../../../../url";
 import Portal from './Portal';
 import CrossIcon from "./CrossIcon";
 import useCurrentFolder from "../../../../../hooks/useCurrentFolder";
@@ -17,13 +17,18 @@ import Button from "./Button";
 import ItemsDiv from "./ItemsDiv";
 import ItemDiv from "./ItemDiv";
 import handleError from "../../../../../functions/handleError";
+import { ColorRing } from "react-loader-spinner";
+import sortFilesAndFolders from "../../../../../functions/sortFilesAndFolders";
+import { useIsMounted } from "../../../../../hooks/useIsMounted";
 
 
 const DeleteFiles = ({ setOpenDeleteFiles }) => {
 
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
+    const [loadingFiles, setLoadingFiles] = useState({})
     const { currentFolder } = useCurrentFolder()
-    const {files, setFiles} = useFiles()
+    const isMountedRef = useIsMounted()
+    const { files, setFiles } = useFiles()
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -37,25 +42,31 @@ const DeleteFiles = ({ setOpenDeleteFiles }) => {
     async function handleDeleteFile(file) {
 
         try {
-            setLoading(true)
+            setLoadingFiles(prev => ({ ...prev, [file.id]: true }))
 
             const response = await axios.delete(url + `/file/${file.id}`, { withCredentials: true })
 
             if (response.data.status) {
 
-                setLoading(false)
                 setFiles(prevFiles => prevFiles.filter(prevFile => prevFile.id !== response.data.file.id))
+
                 successToast(response.data.message)
             }
 
             else {
-                throw new Error(response.data.message);
+                throw new Error(response.data.message)
             }
         }
 
         catch (error) {
 
-            handleError({setLoading, error, dispatch, navigate})
+            handleError({ error, dispatch, navigate })
+        }
+
+        finally {
+            if (isMountedRef.current) {
+                setLoadingFiles(prev => ({ ...prev, [file.id]: false }))
+            }
         }
     }
 
@@ -69,32 +80,48 @@ const DeleteFiles = ({ setOpenDeleteFiles }) => {
 
                     <Heading label="Delete Files" />
 
-                    {files.length > 0 ? (
+                    {loading ? (
+                        <div className='w-full flex justify-center items-center'>
 
-                        <ItemsDiv>
+                            <ColorRing
+                                visible={true}
+                                height="100"
+                                width="100"
+                                ariaLabel="color-ring-loading"
+                                wrapperStyle={{}}
+                                wrapperClass="color-ring-wrapper"
+                                colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+                            />
 
-                            {files.map(file => (
-
-                                <ItemDiv key={file.id}>
-
-                                    <p>{file.name}</p>
-
-                                    <Button
-                                        loading={loading}
-                                        label="delete"
-                                        handleClick={() => handleDeleteFile(file)}
-                                        bgColor="bg-red-500"
-                                        bgColorHover="hover:bg-red-600"
-                                        bgColorDisabled="disabled:bg-red-300"
-                                    />
-
-                                </ItemDiv>
-
-                            ))}
-                            
-                        </ItemsDiv>
+                        </div>
                     ) : (
-                        <h1 className="text-center text-[15px]">No Files to show</h1>
+                        files.length > 0 ? (
+
+                            <ItemsDiv>
+
+                                {sortFilesAndFolders(files).map(file => (
+
+                                    <ItemDiv key={file.id}>
+
+                                        <p>{file.name}</p>
+
+                                        <Button
+                                            loading={loadingFiles[file.id]}
+                                            label="delete"
+                                            handleClick={() => handleDeleteFile(file)}
+                                            bgColor="bg-red-500"
+                                            bgColorHover="hover:bg-red-600"
+                                            bgColorDisabled="disabled:bg-red-300"
+                                        />
+
+                                    </ItemDiv>
+
+                                ))}
+
+                            </ItemsDiv>
+                        ) : (
+                            <h1 className="text-center text-[15px]">No Files to show</h1>
+                        )
                     )}
 
                 </ParentDiv>

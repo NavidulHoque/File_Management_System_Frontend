@@ -7,7 +7,7 @@ import useCurrentFolder from "../../../../../hooks/useCurrentFolder";
 import { validFileExtensions } from './../../../../../extensions/extensions';
 import useFiles from './../../../../../hooks/useFiles';
 import axios from 'axios';
-import { url } from "../../../../../url"; 
+import { url } from "../../../../../url";
 import { useNavigate } from 'react-router-dom';
 import Portal from "./Portal";
 import ParentDiv from "./ParentDiv";
@@ -16,11 +16,14 @@ import Heading from "./Heading";
 import Input from "./Input";
 import Button from "./Button";
 import handleError from "../../../../../functions/handleError";
+import makeLoadingFalse from "../../../../../functions/makeLoadingFalse";
+import { useIsMounted } from "../../../../../hooks/useIsMounted";
 
 
 const CreateFile = ({ setOpenCreateFiles }) => {
   const { currentFolder } = useCurrentFolder()
   const { setFiles } = useFiles()
+  const isMountedRef = useIsMounted()
   const user = useSelector((state) => state.UserLogin.user)
   const [fileName, setFileName] = useState("")
   const [loading, setLoading] = useState(false)
@@ -28,7 +31,7 @@ const CreateFile = ({ setOpenCreateFiles }) => {
   const navigate = useNavigate()
   const validExtensions = validFileExtensions
 
-  
+
   async function handleAddFile() {
 
     const trimmedFileName = fileName.trim()
@@ -73,7 +76,6 @@ const CreateFile = ({ setOpenCreateFiles }) => {
 
         if (response.data.status) {
 
-          setLoading(false)
           setFiles(prevFiles => [...prevFiles, response.data.file])
           setFileName("")
 
@@ -87,7 +89,11 @@ const CreateFile = ({ setOpenCreateFiles }) => {
 
       catch (error) {
 
-        handleError({setLoading, error, dispatch, navigate})
+        handleError({ error, dispatch, navigate })
+      }
+
+      finally {
+        makeLoadingFalse(isMountedRef.current, setLoading)
       }
     }
   }

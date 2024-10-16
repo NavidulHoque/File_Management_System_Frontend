@@ -23,7 +23,6 @@ const Navbar = () => {
       const response = await axios.get(url + "/auth/logout", { withCredentials: true })
 
       if (response.data.status) {
-        setLoading(false)
         dispatch(LogOut())
       }
 
@@ -33,7 +32,11 @@ const Navbar = () => {
     }
 
     catch (error) {
-      handleError({setLoading, error})
+      handleError({error})
+    }
+
+    finally{
+      setLoading(false)
     }
   }
 

@@ -17,12 +17,16 @@ import DeleteFolders from './createDeleteItems/DeleteFolders';
 import DeleteFiles from './createDeleteItems/DeleteFiles';
 import CreateFile from './createDeleteItems/CreateFile';
 import handleError from "../../../../functions/handleError";
+import makeLoadingFalse from "../../../../functions/makeLoadingFalse";
+import { useIsMounted } from "../../../../hooks/useIsMounted";
 
 
 const DashboardNavbar = () => {
   const { folderID } = useParams()
 
   const { currentFolder } = useCurrentFolder()
+
+  const isMountedRef = useIsMounted()
 
   const [foldersOfLoggedInUser, setFoldersOfLoggedInUser] = useState([])
 
@@ -98,7 +102,6 @@ const DashboardNavbar = () => {
 
       if (response.data.status) {
         setFoldersOfLoggedInUser(response.data.folders)
-        setLoading(false)
       }
 
       else {
@@ -107,7 +110,11 @@ const DashboardNavbar = () => {
     }
 
     catch (error) {
-      handleError({ setLoading, error, dispatch, navigate })
+      handleError({ error, dispatch, navigate })
+    }
+
+    finally{
+      makeLoadingFalse(isMountedRef.current, setLoading)
     }
   }
 

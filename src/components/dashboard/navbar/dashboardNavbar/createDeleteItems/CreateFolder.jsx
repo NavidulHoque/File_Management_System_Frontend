@@ -5,7 +5,7 @@ import errorToast from "../../../../../functions/errorToast";
 import successToast from "../../../../../functions/successToast";
 import useCurrentFolder from "../../../../../hooks/useCurrentFolder";
 import useFolders from './../../../../../hooks/useFolders';
-import { url } from "../../../../../url"; 
+import { url } from "../../../../../url";
 import Portal from "./Portal";
 import ParentDiv from './ParentDiv';
 import CrossIcon from "./CrossIcon";
@@ -15,11 +15,14 @@ import Button from "./Button";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import handleError from "../../../../../functions/handleError";
+import makeLoadingFalse from "../../../../../functions/makeLoadingFalse";
+import { useIsMounted } from './../../../../../hooks/useIsMounted';
 
 
 const CreateFolder = ({ setOpenCreateFolders }) => {
   const { currentFolder } = useCurrentFolder()
-  const {setFolders} = useFolders()
+  const { setFolders } = useFolders()
+  const isMountedRef = useIsMounted()
   const user = useSelector((state) => state.UserLogin.user)
   const [folderName, setFolderName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -50,7 +53,7 @@ const CreateFolder = ({ setOpenCreateFolders }) => {
         name: trimmedFolderName,
         parent: currentFolder,
         userID: user.id
-      };
+      }
 
       try {
         setLoading(true)
@@ -59,21 +62,24 @@ const CreateFolder = ({ setOpenCreateFolders }) => {
 
         if (response.data.status) {
 
-          setLoading(false)
           setFolderName("")
           setFolders(prevFolders => [...prevFolders, response.data.folder])
 
           successToast(response.data.message)
         }
 
-        else{
+        else {
           throw new Error(response.data.message)
         }
       }
 
       catch (error) {
 
-        handleError({setLoading, error, dispatch, navigate})
+        handleError({ error, dispatch, navigate })
+      }
+
+      finally {
+        makeLoadingFalse(isMountedRef.current, setLoading)
       }
     }
   }
