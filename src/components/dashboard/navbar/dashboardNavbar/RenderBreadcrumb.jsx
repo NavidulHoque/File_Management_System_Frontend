@@ -9,8 +9,8 @@ const RenderBreadcrumb = ({ loading, currentFolder, folderLists }) => {
 
         <ColorRing
           visible={true}
-          height="100"
-          width="100"
+          height="50"
+          width="50"
           ariaLabel="color-ring-loading"
           wrapperStyle={{}}
           wrapperClass="color-ring-wrapper"
