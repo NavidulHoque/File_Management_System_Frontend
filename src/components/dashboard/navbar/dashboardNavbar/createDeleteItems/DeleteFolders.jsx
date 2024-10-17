@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import successToast from "../../../../../functions/successToast";
 import { url } from "../../../../../url";
 import useFolders from "../../../../../hooks/useFolders";
@@ -18,29 +18,28 @@ import axios from "axios";
 import handleError from "../../../../../functions/handleError";
 import sortFilesAndFolders from "../../../../../functions/sortFilesAndFolders";
 import { ColorRing } from 'react-loader-spinner';
-import { useIsMounted } from "../../../../../hooks/useIsMounted";
 
 
 const DeleteFolders = ({ setOpenDeleteFolders }) => {
     const { folders, setFolders } = useFolders()
     const { currentFolder } = useCurrentFolder()
-    const isMountedRef = useIsMounted()
     const [loading, setLoading] = useState(true)
     const [loadingFolders, setLoadingFolders] = useState({})
+    const user = useSelector(state => state.UserLogin.user)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
     useEffect(() => {
 
         getFolders({
-            path: `/folder/foldersOfCurrentFolder/${currentFolder}`,
+            path: `/folder/foldersOfCurrentFolder/${currentFolder}/${user.id}`,
             setLoading,
             setFolders,
             dispatch,
             navigate
         })
 
-    }, [currentFolder, dispatch, navigate, setFolders])
+    }, [user, currentFolder, dispatch, navigate, setFolders])
 
 
     const handleDeleteFolder = useCallback(async (folder) => {
@@ -56,6 +55,8 @@ const DeleteFolders = ({ setOpenDeleteFolders }) => {
                     prevFolder => prevFolder.id !== response.data.folder.id
                 ))
 
+                setLoadingFolders(prev => ({ ...prev, [folder.id]: false }));
+                
                 successToast(response.data.message)
             }
 
@@ -66,15 +67,11 @@ const DeleteFolders = ({ setOpenDeleteFolders }) => {
 
         catch (error) {
 
+            setLoadingFolders(prev => ({ ...prev, [folder.id]: false }));
             handleError({ error, dispatch, navigate })
         }
 
-        finally {
-            if (isMountedRef.current) {
-                setLoadingFolders(prev => ({ ...prev, [folder.id]: false }));
-            }
-        }
-    }, [dispatch, isMountedRef, navigate, setFolders])
+    }, [dispatch, navigate, setFolders])
 
     return (
         <Portal>

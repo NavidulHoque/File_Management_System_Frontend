@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import useFolders from './../../hooks/useFolders';
 import useFiles from './../../hooks/useFiles';
@@ -7,27 +7,28 @@ import getFolders from "../../functions/getFolders";
 import getFiles from "../../functions/getFiles";
 import RenderFoldersFiles from "../../components/dashboard/RenderFoldersFiles/RenderFoldersFiles";
 import useCurrentFolder from "../../hooks/useCurrentFolder";
-import { useIsMounted } from "../../hooks/useIsMounted";
+
 
 const RootFolder = () => {
 
   const { folders, setFolders } = useFolders()
   const { files, setFiles } = useFiles()
-  const isMountedRef = useIsMounted()
   const {setCurrentFolder} = useCurrentFolder()
   const [loading, setLoading] = useState(true)
+  const user = useSelector(state => state.UserLogin.user)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
+  
   useEffect(() => {
 
     setCurrentFolder("root")
   
-    getFolders({ path: "/folder/foldersOfCurrentFolder/root", isMountedRef, setLoading, setFolders, dispatch, navigate })
+    getFolders({ path: `/folder/foldersOfCurrentFolder/root/${user.id}`, setLoading, setFolders, dispatch, navigate })
 
-    getFiles({ path: "/file/files/root", isMountedRef, setLoading, setFiles, dispatch, navigate })
+    getFiles({ path: `/file/files/root/${user.id}`, setLoading, setFiles, dispatch, navigate })
 
-  }, [dispatch, navigate, isMountedRef, setCurrentFolder, setFiles, setFolders])
+  }, [user, dispatch, navigate, setCurrentFolder, setFiles, setFolders, setLoading])
 
 
   return (

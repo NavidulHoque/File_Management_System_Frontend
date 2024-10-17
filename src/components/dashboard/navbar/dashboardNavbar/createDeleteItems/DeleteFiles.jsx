@@ -6,7 +6,7 @@ import Portal from './Portal';
 import CrossIcon from "./CrossIcon";
 import useCurrentFolder from "../../../../../hooks/useCurrentFolder";
 import getFiles from "./../../../../../functions/getFiles";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import useFiles from "../../../../../hooks/useFiles";
 import successToast from './../../../../../functions/successToast';
@@ -18,7 +18,6 @@ import ItemDiv from "./ItemDiv";
 import handleError from "../../../../../functions/handleError";
 import { ColorRing } from "react-loader-spinner";
 import sortFilesAndFolders from "../../../../../functions/sortFilesAndFolders";
-import { useIsMounted } from "../../../../../hooks/useIsMounted";
 
 
 const DeleteFiles = ({ setOpenDeleteFiles }) => {
@@ -26,16 +25,16 @@ const DeleteFiles = ({ setOpenDeleteFiles }) => {
     const [loading, setLoading] = useState(true)
     const [loadingFiles, setLoadingFiles] = useState({})
     const { currentFolder } = useCurrentFolder()
-    const isMountedRef = useIsMounted()
     const { files, setFiles } = useFiles()
+    const user = useSelector(state => state.UserLogin.user)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
     useEffect(() => {
 
-        getFiles({ path: `/file/files/${currentFolder}`, setLoading, setFiles, dispatch, navigate })
+        getFiles({ path: `/file/files/${currentFolder}/${user.id}`, setLoading, setFiles, dispatch, navigate })
 
-    }, [currentFolder, dispatch, navigate, setFiles])
+    }, [user, currentFolder, dispatch, navigate, setFiles])
 
 
     const handleDeleteFile = useCallback(async (file) => {
@@ -49,6 +48,8 @@ const DeleteFiles = ({ setOpenDeleteFiles }) => {
 
                 setFiles(prevFiles => prevFiles.filter(prevFile => prevFile.id !== response.data.file.id))
 
+                setLoadingFiles(prev => ({ ...prev, [file.id]: false }))
+
                 successToast(response.data.message)
             }
 
@@ -59,16 +60,11 @@ const DeleteFiles = ({ setOpenDeleteFiles }) => {
 
         catch (error) {
 
+            setLoadingFiles(prev => ({ ...prev, [file.id]: false }))
             handleError({ error, dispatch, navigate })
         }
 
-        finally {
-            if (isMountedRef.current) {
-                setLoadingFiles(prev => ({ ...prev, [file.id]: false }))
-            }
-        }
-
-    }, [dispatch, isMountedRef, navigate, setFiles])
+    }, [dispatch, navigate, setFiles])
 
     return (
         <>

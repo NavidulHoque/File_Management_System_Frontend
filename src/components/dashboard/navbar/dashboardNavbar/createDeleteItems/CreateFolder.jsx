@@ -15,20 +15,17 @@ import Button from "./Button";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import handleError from "../../../../../functions/handleError";
-import makeLoadingFalse from "../../../../../functions/makeLoadingFalse";
-import { useIsMounted } from './../../../../../hooks/useIsMounted';
 
 
 const CreateFolder = ({ setOpenCreateFolders }) => {
   const { currentFolder } = useCurrentFolder()
   const { setFolders } = useFolders()
-  const isMountedRef = useIsMounted()
   const user = useSelector((state) => state.UserLogin.user)
   const [folderName, setFolderName] = useState("");
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch()
   const navigate = useNavigate()
-
+  
 
   const handleAddFolder = useCallback(async () => {
 
@@ -65,6 +62,7 @@ const CreateFolder = ({ setOpenCreateFolders }) => {
 
           setFolderName("")
           setFolders(prevFolders => [...prevFolders, response.data.folder])
+          setLoading(false)
 
           successToast(response.data.message)
         }
@@ -75,16 +73,13 @@ const CreateFolder = ({ setOpenCreateFolders }) => {
       }
 
       catch (error) {
-
+        setLoading(false)
         handleError({ error, dispatch, navigate })
-      }
-
-      finally {
-        makeLoadingFalse(isMountedRef.current, setLoading)
       }
     }
 
-  }, [currentFolder, user, folderName, dispatch, isMountedRef, navigate, setFolders])
+  }, [currentFolder, user, folderName, dispatch, navigate, setFolders])
+
 
   return (
 

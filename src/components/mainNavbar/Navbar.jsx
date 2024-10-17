@@ -39,7 +39,7 @@ const Navbar = () => {
       setLoading(false)
     }
     
-  }, [dispatch])
+  }, [dispatch, setLoading])
 
   return (
     <nav className="bg-[rgb(40,40,40)] text-white h-[25vh] md:h-[12vh]">

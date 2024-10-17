@@ -16,16 +16,12 @@ import DeleteFolders from './createDeleteItems/DeleteFolders';
 import DeleteFiles from './createDeleteItems/DeleteFiles';
 import CreateFile from './createDeleteItems/CreateFile';
 import handleError from "../../../../functions/handleError";
-import makeLoadingFalse from "../../../../functions/makeLoadingFalse";
-import { useIsMounted } from "../../../../hooks/useIsMounted";
 
 
 const DashboardNavbar = () => {
   const { folderID } = useParams()
 
   const { currentFolder } = useCurrentFolder()
-
-  const isMountedRef = useIsMounted()
 
   const [foldersOfLoggedInUser, setFoldersOfLoggedInUser] = useState([])
 
@@ -50,7 +46,7 @@ const DashboardNavbar = () => {
 
     setFolderLists([])
 
-  }, [folderID])
+  }, [folderID, setFolderLists])
 
   useEffect(() => {
 
@@ -63,6 +59,7 @@ const DashboardNavbar = () => {
         const response = await axios.get(url + path, { withCredentials: true })
 
         if (response.data.status) {
+          setLoading(false)
           setFoldersOfLoggedInUser(response.data.folders)
         }
 
@@ -72,11 +69,8 @@ const DashboardNavbar = () => {
       }
 
       catch (error) {
+        setLoading(false)
         handleError({ error, dispatch, navigate })
-      }
-
-      finally {
-        makeLoadingFalse(isMountedRef.current, setLoading)
       }
     }
 
@@ -84,7 +78,7 @@ const DashboardNavbar = () => {
       getFolders()
     }
 
-  }, [currentFolder, user, dispatch, navigate, isMountedRef])
+  }, [currentFolder, user, dispatch, navigate])
 
 
   useEffect(() => {

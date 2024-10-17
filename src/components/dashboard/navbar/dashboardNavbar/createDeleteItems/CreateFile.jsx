@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-
 import { useDispatch, useSelector } from "react-redux";
 import { useCallback, useState } from "react";
 import successToast from "../../../../../functions/successToast";
@@ -17,14 +16,11 @@ import Heading from "./Heading";
 import Input from "./Input";
 import Button from "./Button";
 import handleError from "../../../../../functions/handleError";
-import makeLoadingFalse from "../../../../../functions/makeLoadingFalse";
-import { useIsMounted } from "../../../../../hooks/useIsMounted";
 
 
 const CreateFile = ({ setOpenCreateFiles }) => {
   const { currentFolder } = useCurrentFolder()
   const { setFiles } = useFiles()
-  const isMountedRef = useIsMounted()
   const user = useSelector((state) => state.UserLogin.user)
   const [fileName, setFileName] = useState("")
   const [loading, setLoading] = useState(false)
@@ -79,6 +75,7 @@ const CreateFile = ({ setOpenCreateFiles }) => {
 
           setFiles(prevFiles => [...prevFiles, response.data.file])
           setFileName("")
+          setLoading(false)
 
           successToast(response.data.message)
         }
@@ -90,15 +87,12 @@ const CreateFile = ({ setOpenCreateFiles }) => {
 
       catch (error) {
 
+        setLoading(false)
         handleError({ error, dispatch, navigate })
-      }
-
-      finally {
-        makeLoadingFalse(isMountedRef.current, setLoading)
       }
     }
 
-  }, [currentFolder, fileName, user, dispatch, isMountedRef, navigate, setFiles, validExtensions])
+  }, [currentFolder, fileName, user, dispatch, navigate, setFiles, validExtensions])
 
   return (
     <>

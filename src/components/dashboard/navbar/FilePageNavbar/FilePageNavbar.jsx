@@ -9,15 +9,13 @@ import { url } from "../../../../url";
 import Button from "./Button";
 import handleError from "../../../../functions/handleError";
 import { useDispatch } from "react-redux";
-import makeLoadingFalse from "../../../../functions/makeLoadingFalse";
-import { useIsMounted } from "../../../../hooks/useIsMounted";
+
 
 const FilePageNavbar = ({ file, fileData, setFile }) => {
   const { fileID } = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
-  const isMountedRef = useIsMounted()
 
   const handleGoBack = useCallback(async () => {
     if (file?.parent === "root") {
@@ -28,6 +26,7 @@ const FilePageNavbar = ({ file, fileData, setFile }) => {
       navigate(`/dashboard/folder/${file?.parent}`)
     }
   }, [file, navigate])
+
 
   const handleSave = useCallback(async () => {
 
@@ -43,6 +42,7 @@ const FilePageNavbar = ({ file, fileData, setFile }) => {
       if (response.data.status) {
 
         setFile(response.data.file)
+        setLoading(false)
         successToast(response.data.message)
       }
 
@@ -53,13 +53,12 @@ const FilePageNavbar = ({ file, fileData, setFile }) => {
 
     catch (error) {
 
+      setLoading(false)
       handleError({ error, dispatch, navigate})
     }
 
-    finally{
-      makeLoadingFalse(isMountedRef.current, setLoading)
-    }
-  }, [dispatch, fileID, fileData, isMountedRef, navigate, setFile])
+  }, [fileID, fileData, dispatch, navigate, setFile, setLoading])
+  
 
   return (
     <nav className="py-[15px]">

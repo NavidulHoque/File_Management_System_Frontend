@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import useFolders from "../../hooks/useFolders"
@@ -15,6 +15,7 @@ const OtherFolder = () => {
   const { files, setFiles } = useFiles()
   const {setCurrentFolder} = useCurrentFolder()
   const [loading, setLoading] = useState(true)
+  const user = useSelector(state => state.UserLogin.user)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -22,11 +23,11 @@ const OtherFolder = () => {
 
     setCurrentFolder(folderID)
 
-    getFolders({ path: `/folder/foldersOfCurrentFolder/${folderID}`, setLoading, setFolders, dispatch, navigate })
+    getFolders({ path: `/folder/foldersOfCurrentFolder/${folderID}/${user.id}`, setLoading, setFolders, dispatch, navigate })
     
-    getFiles({ path: `/file/files/${folderID}`, setLoading, setFiles, dispatch, navigate })
+    getFiles({ path: `/file/files/${folderID}/${user.id}`, setLoading, setFiles, dispatch, navigate })
 
-  }, [folderID, dispatch, navigate, setCurrentFolder, setFolders, setFiles])
+  }, [folderID, user, dispatch, navigate, setCurrentFolder, setFolders, setFiles])
 
   return (
     <div className="flex flex-col pt-6">
