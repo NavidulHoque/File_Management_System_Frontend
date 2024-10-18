@@ -2,7 +2,7 @@ import axios from "axios"
 import { url } from "../url"
 import handleError from "./handleError"
 
-export default async function getFolders({path, setLoading, setFolders, dispatch, navigate}) {
+export default async function getFolders({path, setLoading, setFoldersOfCurrentFolder, dispatch, navigate}) {
 
     try {
         const response = await axios.get(url + path, { withCredentials: true })
@@ -10,7 +10,7 @@ export default async function getFolders({path, setLoading, setFolders, dispatch
         if (response.data.status) {
 
             setLoading(false)
-            setFolders(response.data.folders)
+            setFoldersOfCurrentFolder(response.data.folders)
         }
 
         else {
@@ -23,7 +23,7 @@ export default async function getFolders({path, setLoading, setFolders, dispatch
         setLoading(false)
 
         if (error.message === "empty") {
-            setFolders([])
+            setFoldersOfCurrentFolder([])
         }
 
         else {

@@ -19,7 +19,7 @@ import handleError from "../../../../../functions/handleError";
 
 const CreateFolder = ({ setOpenCreateFolders }) => {
   const { currentFolder } = useCurrentFolder()
-  const { setFolders } = useFolders()
+  const { setFoldersOfCurrentFolder } = useFolders()
   const user = useSelector((state) => state.UserLogin.user)
   const [folderName, setFolderName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -61,7 +61,7 @@ const CreateFolder = ({ setOpenCreateFolders }) => {
         if (response.data.status) {
 
           setFolderName("")
-          setFolders(prevFolders => [...prevFolders, response.data.folder])
+          setFoldersOfCurrentFolder(prevFolders => [...prevFolders, response.data.folder])
           setLoading(false)
 
           successToast(response.data.message)
@@ -78,7 +78,7 @@ const CreateFolder = ({ setOpenCreateFolders }) => {
       }
     }
 
-  }, [currentFolder, user, folderName, dispatch, navigate, setFolders])
+  }, [currentFolder, user, folderName, dispatch, navigate, setFoldersOfCurrentFolder])
 
 
   return (

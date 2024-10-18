@@ -21,7 +21,7 @@ import { ColorRing } from 'react-loader-spinner';
 
 
 const DeleteFolders = ({ setOpenDeleteFolders }) => {
-    const { folders, setFolders } = useFolders()
+    const { foldersOfCurrentFolder, setFoldersOfCurrentFolder } = useFolders()
     const { currentFolder } = useCurrentFolder()
     const [loading, setLoading] = useState(true)
     const [loadingFolders, setLoadingFolders] = useState({})
@@ -34,12 +34,12 @@ const DeleteFolders = ({ setOpenDeleteFolders }) => {
         getFolders({
             path: `/folder/foldersOfCurrentFolder/${currentFolder}/${user.id}`,
             setLoading,
-            setFolders,
+            setFoldersOfCurrentFolder,
             dispatch,
             navigate
         })
 
-    }, [user, currentFolder, dispatch, navigate, setFolders])
+    }, [user, currentFolder, dispatch, navigate, setFoldersOfCurrentFolder])
 
 
     const handleDeleteFolder = useCallback(async (folder) => {
@@ -51,7 +51,7 @@ const DeleteFolders = ({ setOpenDeleteFolders }) => {
 
             if (response.data.status) {
 
-                setFolders(prevFolders => prevFolders.filter(
+                setFoldersOfCurrentFolder(prevFolders => prevFolders.filter(
                     prevFolder => prevFolder.id !== response.data.folder.id
                 ))
 
@@ -71,7 +71,7 @@ const DeleteFolders = ({ setOpenDeleteFolders }) => {
             handleError({ error, dispatch, navigate })
         }
 
-    }, [dispatch, navigate, setFolders])
+    }, [dispatch, navigate, setFoldersOfCurrentFolder])
 
     return (
         <Portal>
@@ -100,11 +100,11 @@ const DeleteFolders = ({ setOpenDeleteFolders }) => {
 
                 ) : (
 
-                    folders.length > 0 ? (
+                    foldersOfCurrentFolder.length > 0 ? (
 
                         <ItemsDiv>
 
-                            {sortFilesAndFolders(folders).map(folder => (
+                            {sortFilesAndFolders(foldersOfCurrentFolder).map(folder => (
 
                                 <ItemDiv key={folder.id}>
 

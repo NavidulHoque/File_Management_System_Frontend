@@ -20,7 +20,7 @@ import handleError from "../../../../../functions/handleError";
 
 const CreateFile = ({ setOpenCreateFiles }) => {
   const { currentFolder } = useCurrentFolder()
-  const { setFiles } = useFiles()
+  const { setFilesOfCurrentFolder } = useFiles()
   const user = useSelector((state) => state.UserLogin.user)
   const [fileName, setFileName] = useState("")
   const [loading, setLoading] = useState(false)
@@ -73,7 +73,7 @@ const CreateFile = ({ setOpenCreateFiles }) => {
 
         if (response.data.status) {
 
-          setFiles(prevFiles => [...prevFiles, response.data.file])
+          setFilesOfCurrentFolder(prevFiles => [...prevFiles, response.data.file])
           setFileName("")
           setLoading(false)
 
@@ -92,7 +92,7 @@ const CreateFile = ({ setOpenCreateFiles }) => {
       }
     }
 
-  }, [currentFolder, fileName, user, dispatch, navigate, setFiles, validExtensions])
+  }, [currentFolder, fileName, user, dispatch, navigate, setFilesOfCurrentFolder, validExtensions])
 
   return (
     <>

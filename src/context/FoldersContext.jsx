@@ -6,10 +6,10 @@ export const FoldersContext = createContext({})
 
 export default function FoldersProvider({ children }) {
 
-    const [folders, setFolders] = useState([])
+    const [foldersOfCurrentFolder, setFoldersOfCurrentFolder] = useState([])
 
     return (
-        <FoldersContext.Provider value={{ folders, setFolders }}>
+        <FoldersContext.Provider value={{ foldersOfCurrentFolder, setFoldersOfCurrentFolder }}>
             {children}
         </FoldersContext.Provider>
     )

@@ -80,7 +80,7 @@ const Navbar = () => {
 
             <div className="flex gap-x-3">
 
-              {location.pathname === "/dashboard" ? (
+              {!(location.pathname === "/") ? (
 
                 <Button
                   label="Home"

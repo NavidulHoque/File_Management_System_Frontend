@@ -2,7 +2,7 @@ import axios from "axios"
 import { url } from "../url"
 import handleError from './handleError';
 
-export default async function getFiles({ path, setLoading, setFiles, dispatch, navigate }) {
+export default async function getFiles({ path, setLoading, setFilesOfCurrentFolder, dispatch, navigate }) {
 
   try {
     const response = await axios.get(url + path, { withCredentials: true })
@@ -10,7 +10,7 @@ export default async function getFiles({ path, setLoading, setFiles, dispatch, n
     if (response.data.status) {
 
       setLoading(false)
-      setFiles(response.data.files)
+      setFilesOfCurrentFolder(response.data.files)
     }
 
     else {
@@ -23,7 +23,7 @@ export default async function getFiles({ path, setLoading, setFiles, dispatch, n
     setLoading(false)
 
     if (error.message === "empty") {
-      setFiles([])
+      setFilesOfCurrentFolder([])
     }
 
     else {

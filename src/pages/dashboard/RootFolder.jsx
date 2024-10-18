@@ -11,8 +11,8 @@ import useCurrentFolder from "../../hooks/useCurrentFolder";
 
 const RootFolder = () => {
 
-  const { folders, setFolders } = useFolders()
-  const { files, setFiles } = useFiles()
+  const { foldersOfCurrentFolder, setFoldersOfCurrentFolder } = useFolders()
+  const { filesOfCurrentFolder, setFilesOfCurrentFolder } = useFiles()
   const {setCurrentFolder} = useCurrentFolder()
   const [loading, setLoading] = useState(true)
   const user = useSelector(state => state.UserLogin.user)
@@ -24,11 +24,11 @@ const RootFolder = () => {
 
     setCurrentFolder("root")
   
-    getFolders({ path: `/folder/foldersOfCurrentFolder/root/${user.id}`, setLoading, setFolders, dispatch, navigate })
+    getFolders({ path: `/folder/foldersOfCurrentFolder/root/${user.id}`, setLoading, setFoldersOfCurrentFolder, dispatch, navigate })
 
-    getFiles({ path: `/file/files/root/${user.id}`, setLoading, setFiles, dispatch, navigate })
+    getFiles({ path: `/file/files/root/${user.id}`, setLoading, setFilesOfCurrentFolder, dispatch, navigate })
 
-  }, [user, dispatch, navigate, setCurrentFolder, setFiles, setFolders, setLoading])
+  }, [user, dispatch, navigate, setCurrentFolder, setFilesOfCurrentFolder, setFoldersOfCurrentFolder, setLoading])
 
 
   return (
@@ -36,8 +36,8 @@ const RootFolder = () => {
 
       <RenderFoldersFiles 
         loading={loading}
-        folders={folders}
-        files={files} 
+        folders={foldersOfCurrentFolder}
+        files={filesOfCurrentFolder} 
       />
 
     </div>

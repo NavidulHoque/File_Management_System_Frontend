@@ -6,10 +6,10 @@ export const FilesContext = createContext({})
 
 export default function FilesProvider({ children }) {
 
-    const [files, setFiles] = useState([])
+    const [filesOfCurrentFolder, setFilesOfCurrentFolder] = useState([])
 
     return (
-        <FilesContext.Provider value={{ files, setFiles }}>
+        <FilesContext.Provider value={{ filesOfCurrentFolder, setFilesOfCurrentFolder }}>
             {children}
         </FilesContext.Provider>
     )

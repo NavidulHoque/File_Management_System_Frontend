@@ -11,8 +11,8 @@ import useCurrentFolder from "../../hooks/useCurrentFolder"
 
 const OtherFolder = () => {
   const { folderID } = useParams()
-  const { folders, setFolders } = useFolders()
-  const { files, setFiles } = useFiles()
+  const { foldersOfCurrentFolder, setFoldersOfCurrentFolder } = useFolders()
+  const { filesOfCurrentFolder, setFilesOfCurrentFolder } = useFiles()
   const {setCurrentFolder} = useCurrentFolder()
   const [loading, setLoading] = useState(true)
   const user = useSelector(state => state.UserLogin.user)
@@ -23,19 +23,19 @@ const OtherFolder = () => {
 
     setCurrentFolder(folderID)
 
-    getFolders({ path: `/folder/foldersOfCurrentFolder/${folderID}/${user.id}`, setLoading, setFolders, dispatch, navigate })
+    getFolders({ path: `/folder/foldersOfCurrentFolder/${folderID}/${user.id}`, setLoading, setFoldersOfCurrentFolder, dispatch, navigate })
     
-    getFiles({ path: `/file/files/${folderID}/${user.id}`, setLoading, setFiles, dispatch, navigate })
+    getFiles({ path: `/file/files/${folderID}/${user.id}`, setLoading, setFilesOfCurrentFolder, dispatch, navigate })
 
-  }, [folderID, user, dispatch, navigate, setCurrentFolder, setFolders, setFiles])
+  }, [folderID, user, dispatch, navigate, setCurrentFolder, setFoldersOfCurrentFolder, setFilesOfCurrentFolder, setLoading])
 
   return (
     <div className="flex flex-col pt-6">
 
       <RenderFoldersFiles
         loading={loading}
-        folders={folders}
-        files={files}
+        folders={foldersOfCurrentFolder}
+        files={filesOfCurrentFolder}
       />
 
     </div>

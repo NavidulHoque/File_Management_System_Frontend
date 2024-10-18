@@ -22,19 +22,19 @@ import sortFilesAndFolders from "../../../../../functions/sortFilesAndFolders";
 
 const DeleteFiles = ({ setOpenDeleteFiles }) => {
 
+    const { currentFolder } = useCurrentFolder()
+    const { filesOfCurrentFolder, setFilesOfCurrentFolder } = useFiles()
     const [loading, setLoading] = useState(true)
     const [loadingFiles, setLoadingFiles] = useState({})
-    const { currentFolder } = useCurrentFolder()
-    const { files, setFiles } = useFiles()
     const user = useSelector(state => state.UserLogin.user)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
     useEffect(() => {
 
-        getFiles({ path: `/file/files/${currentFolder}/${user.id}`, setLoading, setFiles, dispatch, navigate })
+        getFiles({ path: `/file/files/${currentFolder}/${user.id}`, setLoading, setFilesOfCurrentFolder, dispatch, navigate })
 
-    }, [user, currentFolder, dispatch, navigate, setFiles])
+    }, [user, currentFolder, dispatch, navigate, setFilesOfCurrentFolder])
 
 
     const handleDeleteFile = useCallback(async (file) => {
@@ -46,7 +46,9 @@ const DeleteFiles = ({ setOpenDeleteFiles }) => {
 
             if (response.data.status) {
 
-                setFiles(prevFiles => prevFiles.filter(prevFile => prevFile.id !== response.data.file.id))
+                setFilesOfCurrentFolder(prevFiles => prevFiles.filter(
+                    prevFile => prevFile.id !== response.data.file.id
+                ))
 
                 setLoadingFiles(prev => ({ ...prev, [file.id]: false }))
 
@@ -64,7 +66,7 @@ const DeleteFiles = ({ setOpenDeleteFiles }) => {
             handleError({ error, dispatch, navigate })
         }
 
-    }, [dispatch, navigate, setFiles])
+    }, [dispatch, navigate, setFilesOfCurrentFolder])
 
     return (
         <>
@@ -91,11 +93,11 @@ const DeleteFiles = ({ setOpenDeleteFiles }) => {
 
                         </div>
                     ) : (
-                        files.length > 0 ? (
+                        filesOfCurrentFolder.length > 0 ? (
 
                             <ItemsDiv>
 
-                                {sortFilesAndFolders(files).map(file => (
+                                {sortFilesAndFolders(filesOfCurrentFolder).map(file => (
 
                                     <ItemDiv key={file.id}>
 
